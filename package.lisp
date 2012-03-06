@@ -1,5 +1,7 @@
 ;;;; package.lisp
 
 (defpackage #:pappy
-  (:use #:cl))
+  (:use #:cl
+	#:cl-inflector
+	#:cl-json))
 
