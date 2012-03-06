@@ -1,22 +1,8 @@
-(ql:quickload "cl-mongo")
-(ql:quickload "toot")
-(ql:quickload "cl-json")
-(ql:quickload "cl-inflector")
-(ql:quickload "split-sequence")
+;;;; pappy.lisp
 
-(defpackage :pappy
-  (:documentation "A simple API built for mobile apps.")
-  (:use :cl
-        :cl-mongo
-        :split-sequence
-        :toot
-        :json
-        :cl-inflector))
-        
-; (in-package :pappy)
+(in-package #:pappy)
 
-(use-package :cl-inflector)
-(use-package :split-sequence)
+;;; "pappy" goes here. Hacks and glory await!
 
 (defun deliver-response (resp json)
   (format resp json))
