@@ -1,4 +1,4 @@
-**Pappy helps you make really easy mobile APIs**
+**Pappy makes making APIs for mobile apps really easy**
 
 Install Pappy
 =============
