@@ -2,35 +2,17 @@
 
 (in-package #:pappy)
 
-;;; "pappy" goes here. Hacks and glory await!
+(use-package :split-sequence)
 
-(defun deliver-response (resp json)
-  (format resp json))
-  
-(defun render (response)
-  (json:encode-json-to-string response))
-  
-(defun path-elements (path)
-  (split-sequence #\/ path))
+; Change for your mongo database.
+(cl-mongo:db.use "pappy")
 
-; Handles routing to models
-(defun response-to (request)
-  (let
-    (
-      (path (puri:uri-path (toot:request-uri request)))
-    )
-    (let
-      (
-        (model (singular-of (nth 1 (path-elements path))))
-        (key                (nth 2 (path-elements path)))
-      )
-      (find-all-or-one model key))))
+(load "library/server.lisp")
+(load "library/controller.lisp")
+(load "library/model.lisp")
+(load "library/view.lisp")
 
 ; find either all the objects or one (if there's an optional key, show just that one)
 (defun find-all-or-one (model &optional key))
-
-(defun http-handler (request)
-  (let ((resp (toot:send-headers request)))
-    (deliver-response resp (render (response-to request)))))
 
 (toot:start-server :port 8080 :handler 'http-handler)

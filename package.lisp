@@ -3,5 +3,5 @@
 (defpackage #:pappy
   (:use #:cl
 	#:cl-inflector
-	#:cl-json))
+	#:split-sequence))
 
