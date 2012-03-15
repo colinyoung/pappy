@@ -1,15 +1,13 @@
-(defclass Response ()
-  ((value)
+(defclass response ()
+  ((content
+      :initform ""
+      :accessor content)
     (status-code
       :initform 200
-      :accessor :status-code)))
-
-(defun deliver-response (resp json)
-  (format resp json))
+      :accessor status-code)))
   
-(defun render (response)
-  (if (null response) (return-from render ""))
-  (json:encode-json-to-string (slot-value response 'value)))
+(defun render (resp)
+    (json:encode-json-to-string (content resp)))
   
 (defun path-elements (path)
   (split-sequence #\/ path))
@@ -22,7 +20,16 @@
     )
     (let
       (
-        (model (singular-of (nth 1 (path-elements path))))
+        (model              (nth 1 (path-elements path)))
         (key                (nth 2 (path-elements path)))
+        (resp               (make-instance 'response))
       )
-      (find-all-or-one model key))))
+      
+      (setf dot-position (search "." model))
+      (if (not (null dot-position))
+        (setf model (subseq model 0 dot-position)))
+      (setf model (singular-of model))
+      
+      (setf (content resp) (find-all-or-one model key))
+      
+      resp)))

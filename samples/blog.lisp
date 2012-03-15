@@ -44,4 +44,4 @@
 ; Run the server
 ; --------------
 
-(start-server 3000)
+(run 3000)
