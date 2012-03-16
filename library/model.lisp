@@ -6,7 +6,7 @@
 (defun defmodel (&rest args)
   "Defines a model. The first argument is the model
   name, the rest are fields."
-  (let ((model (string (car args))) (fields (cdr args)))
+  (let ((model (string-downcase (string (car args)))) (fields (cdr args)))
     ; Ensure the collection is created in mongo
     ; (db.create-collection model)
     ; for some reason this doesn't work?
@@ -16,7 +16,10 @@
       do (db.ensure-index model (string (cdr (cdr field)))))
       
     ; (re)define the fields for this class
-    (setf (gethash model *MODELS*) fields)))
+    (clrhash *MODELS*)
+    (setf (gethash 'post *MODELS*) fields)
+    (print (gethash 'post *MODELS*))
+    ))
 
 ; FIELD DEFINITIONS
 
@@ -115,7 +118,7 @@
 
 (defun model-fields (model)
   "Prints all the fields from a model."
-  (gethash model *MODELS*))
+  (gethash 'post *MODELS*))
   
 ; Field utility methods
 (defun oid-to-string (oid)
