@@ -12,28 +12,47 @@
   (text :body)
   (many :comments))
 
-; (defmodel :comment
-;   ((text :body)
-;   (user :many)))
-;   
-; (defmodel :user
-;   ((str :first_name)
-;   (str :last_name)
-;   (str :email)))
+(defmodel :comment
+  (text :body)
+  (one :user))
+
+(defmodel :user
+  (str :first_name)
+  (str :last_name)
+  (str :email))
+  
+; Controller filters
+; ------------------
+; Much like Rails before_filters, these get called before every request.
+; If they change the global *status-code* variable to a non-200 value,
+; the action (read, create, etc) won't be performed and an error 
+; message will be delivered.
+
+(defun is-user ()
+  "Tells if the current request is a user request."
+  (loop for p in (toot::get-parameters *REQUEST*)
+    do
+      (if (string-equal (car p) "user_id")
+        ; find user
+        (let 
+          ((user (find-one-by-id "user" (cdr p))))
+          ; a user must be found or they aren't authorized
+          (if (null user) (unauthorized))))))
+  
+(defun print-parameters ()
+  (pp-query (toot::get-parameters *REQUEST*)))
   
 ; Controllers
 ; -----------
-; (controller :post :all
-;   ((:update post-editp)
-;   (:delete post-editp)))
-; 
-; (controller :comment :all
-;   ((:update is-user)
-;   (:delete is-user)))
-;   
-; (controller :user :all
-;   ((:update is-user)
-;   (:delete is-user)))
+
+(controller :comments
+    :read 'print-parameters
+    :update 'is-user
+    :delete 'is-user)
+    
+(controller :posts
+    :update 'is-user
+    :delete 'is-user)    
   
 ; Special functions
 ; -----------------

@@ -1,9 +1,8 @@
 (use-package :cl-mongo)
 
-; Set up model fields memory storage
-(defparameter *MODELS* (make-hash-table))
-
 (defun defmodel (&rest args)
+  (setup)
+  
   "Defines a model. The first argument is the model
   name, the rest are fields."
   (let ((model (string-downcase (string (car args)))) (fields (cdr args)))
@@ -17,9 +16,7 @@
       
     ; (re)define the fields for this class
     (clrhash *MODELS*)
-    (setf (gethash 'post *MODELS*) fields)
-    (print (gethash 'post *MODELS*))
-    ))
+    (setf (gethash (make-keyword model) *MODELS*) fields)))
 
 ; FIELD DEFINITIONS
 
@@ -118,6 +115,10 @@
 
 (defun model-fields (model)
   "Prints all the fields from a model."
+  (gethash 'post *MODELS*))
+  
+(defun model-protected-fields (model)
+  "Prints all the protected fields from a model."
   (gethash 'post *MODELS*))
   
 ; Field utility methods

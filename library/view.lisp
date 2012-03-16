@@ -38,6 +38,8 @@
       (setf model (singular-of model))
       
       ; Generate response based on request method (GET, POST, PUT, DELETE)
+      (run-controller method (pluralize 2 model))
+      
       (setf (content resp)
         (cond 
           ((string-equal "GET" method)
@@ -55,17 +57,17 @@
 ; Access control
 (defun filtered-elements (model elements)
   "Filters the elements of an object the way it should be."
-  (loop for field in (model-fields model)
+  (loop for field in (model-fields model) 
     do
       (setf key (string-downcase (string (car (cdr field)))))
       (setf key-present (nth-value 1 (gethash key elements)))
-      (if (null key-present)
+      (if (and key-present (find key (model-protected-fields model)))
         (remhash key elements)))
         
   elements)
   
 (defun print-hash (key value)
-  (format t "key ~a value ~a" key value))
+  (format t "[hash] ~a => ~a~%" key value))
 
 ; URI Utilities
 (defun pp-query (query)
