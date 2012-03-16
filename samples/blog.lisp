@@ -17,9 +17,9 @@
 ;   (user :many)))
 ;   
 ; (defmodel :user
-;   ((string :first_name)
-;   (string :last_name)
-;   (string :email)))
+;   ((str :first_name)
+;   (str :last_name)
+;   (str :email)))
   
 ; Controllers
 ; -----------
